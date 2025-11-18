@@ -8,6 +8,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -28,7 +30,8 @@ public class ItemServiceImpl implements ItemService {
                 item.getId(),
                 item.getTitle(),
                 item.getDescription(),
-                item.getCreatedAt()
+                item.getCreatedAt(),
+                item.getUpdatedAt()
         );
     }
 
@@ -64,13 +67,15 @@ public class ItemServiceImpl implements ItemService {
             item.setDescription(request.getDescription());
         }
 
+        item.setUpdatedAt(LocalDateTime.now());
         itemRepository.save(item);
 
         return  new ItemResponse(
                 item.getId(),
                 item.getTitle(),
                 item.getDescription(),
-                item.getCreatedAt()
+                item.getCreatedAt(),
+                item.getUpdatedAt()
         );
 
     }
