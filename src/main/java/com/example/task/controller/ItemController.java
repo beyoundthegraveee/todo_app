@@ -3,12 +3,10 @@ package com.example.task.controller;
 import com.example.task.models.Item;
 import com.example.task.service.ItemService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/items")
@@ -24,9 +22,18 @@ public class ItemController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public Iterable<Item> getAllItems() {
         return itemService.findAll();
     }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Optional<Item> getItemById(@PathVariable Integer id) {
+        return itemService.getItemById(id);
+    }
+
+
 
 
 
