@@ -1,5 +1,6 @@
 package com.example.task.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,14 +11,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ItemResponse {
 
+    @NotBlank
     long id;
 
+    @NotBlank
     String title;
 
+    @NotBlank
     String description;
 
-    LocalDate createdAt;
+    @NotBlank
+    LocalDateTime createdAt;
 
+    @NotBlank
+    LocalDateTime updatedAt;
 
 
 }

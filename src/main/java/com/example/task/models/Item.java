@@ -22,6 +22,10 @@ public class Item {
     private String description;
 
     @Column(updatable = false, nullable = false)
-    private LocalDate createdAt =  LocalDate.now();
+    private LocalDateTime createdAt =  LocalDateTime.now();
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
 
 }
