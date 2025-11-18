@@ -4,6 +4,7 @@ import com.example.task.dto.ItemRequest;
 import com.example.task.dto.ItemResponse;
 import com.example.task.models.Item;
 import com.example.task.repositories.ItemRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,29 @@ public class ItemServiceImpl implements ItemService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public ItemResponse updateItemById(ItemRequest request, Integer id) {
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Item not found with id: " + id));
+        if(request.getTitle()!=null && !request.getTitle().isBlank()){
+            item.setTitle(request.getTitle());
+        }
+
+        if(request.getDescription()!=null && !request.getDescription().isBlank()){
+            item.setDescription(request.getDescription());
+        }
+
+        itemRepository.save(item);
+
+        return  new ItemResponse(
+                item.getId(),
+                item.getTitle(),
+                item.getDescription(),
+                item.getCreatedAt()
+        );
+
     }
 }
 

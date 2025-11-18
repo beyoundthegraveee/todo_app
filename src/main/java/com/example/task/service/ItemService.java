@@ -16,4 +16,6 @@ public interface ItemService {
     Optional<Item> getItemById(Integer id);
 
     boolean deleteItem(Integer id);
+
+    ItemResponse updateItemById(ItemRequest request, Integer id);
 }
