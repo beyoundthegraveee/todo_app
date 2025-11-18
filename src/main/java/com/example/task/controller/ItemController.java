@@ -9,9 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/items")
 @AllArgsConstructor
@@ -45,6 +42,12 @@ public class ItemController {
         }else  {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ItemResponse> updateItemById(@PathVariable Integer id, @RequestBody ItemRequest request) {
+        ItemResponse itemResponse = itemService.updateItemById(request, id);
+        return new ResponseEntity<>(itemResponse, HttpStatus.OK);
     }
 
 
