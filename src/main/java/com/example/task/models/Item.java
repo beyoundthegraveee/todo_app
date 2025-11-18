@@ -1,6 +1,7 @@
 package com.example.task.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -22,6 +23,5 @@ public class Item {
 
     @Column(updatable = false, nullable = false)
     private LocalDate createdAt =  LocalDate.now();
-
 
 }

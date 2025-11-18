@@ -1,5 +1,7 @@
 package com.example.task.service;
 
+import com.example.task.dto.ItemRequest;
+import com.example.task.dto.ItemResponse;
 import com.example.task.models.Item;
 
 import java.util.Optional;
@@ -7,9 +9,11 @@ import java.util.Optional;
 
 public interface ItemService {
 
-    Item addItem(Item item);
+    ItemResponse addItem(ItemRequest request);
 
     Iterable<Item> findAll();
 
     Optional<Item> getItemById(Integer id);
+
+    boolean deleteItem(Integer id);
 }
