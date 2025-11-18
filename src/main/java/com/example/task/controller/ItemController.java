@@ -23,5 +23,13 @@ public class ItemController {
         return itemService.addItem(item);
     }
 
+    @GetMapping
+    public Iterable<Item> getAllItems() {
+        return itemService.findAll();
+    }
+
+
+
+
 
 }

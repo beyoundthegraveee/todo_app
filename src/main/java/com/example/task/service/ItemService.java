@@ -6,4 +6,5 @@ public interface ItemService {
 
     Item addItem(Item item);
 
+    Iterable<Item> findAll();
 }
