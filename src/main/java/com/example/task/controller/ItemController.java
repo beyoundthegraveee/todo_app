@@ -20,7 +20,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping()
-    public ResponseEntity<ItemResponse> createItem ( @RequestBody ItemRequest request) {
+    public ResponseEntity<ItemResponse> createItem ( @RequestBody @Valid ItemRequest request) {
         ItemResponse itemResponse = itemService.addItem(request);
         return new ResponseEntity<>(itemResponse, HttpStatus.CREATED);
     }
@@ -48,7 +48,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ItemResponse> updateItemById(@PathVariable Integer id, @RequestBody ItemRequest request) {
+    public ResponseEntity<ItemResponse> updateItemById(@PathVariable Integer id, @RequestBody @Valid ItemRequest request) {
         ItemResponse itemResponse = itemService.updateItemById(request, id);
         return new ResponseEntity<>(itemResponse, HttpStatus.OK);
     }
