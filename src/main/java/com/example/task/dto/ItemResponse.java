@@ -3,28 +3,25 @@ package com.example.task.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ItemResponse {
 
-    @NotBlank
-    long id;
+    private Long id;
 
-    @NotBlank
-    String title;
+    private String title;
 
-    @NotBlank
-    String description;
+    private String description;
 
-    @NotBlank
-    LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
-    @NotBlank
-    LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
 
 }
