@@ -24,7 +24,7 @@ public class ItemExceptionHandler  {
     public ResponseEntity<?> handleServerException(Exception e) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        response.put("message", "Internal Server Error");
+        response.put("message", e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
