@@ -13,8 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,6 +79,22 @@ public class ItemControllerIntegrationTest {
     @Test
     void getItemByIdShouldReturnNotFound() throws Exception {
         mockMvc.perform(get("/api/items/{id}", 11111))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteItemByIdShouldReturnTrue() throws Exception {
+        ItemRequest item = new ItemRequest("Task1", "Description 1");
+        ItemResponse saved = itemService.addItem(item);
+
+        mockMvc.perform(delete("/api/items/{id}", saved.getId())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteItemByIdShouldReturnNotFound() throws Exception {
+        mockMvc.perform(delete("/api/items/{id}", 11111))
                 .andExpect(status().isNotFound());
     }
 
