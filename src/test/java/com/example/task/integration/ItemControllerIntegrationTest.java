@@ -99,6 +99,22 @@ public class ItemControllerIntegrationTest {
     }
 
 
+    @Test
+    void updateItemShouldReturnUpdatedItem() throws Exception {
+        ItemRequest item = new ItemRequest("Task1", "Description 1");
+        ItemResponse saved = itemService.addItem(item);
+
+        ItemRequest updateItem = new ItemRequest("New Task", "New Description");
+        mockMvc.perform(patch("/api/items/{id}", saved.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateItem)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(saved.getId()))
+                .andExpect(jsonPath("$.title").value(updateItem.getTitle()))
+                .andExpect(jsonPath("$.description").value(updateItem.getDescription()));
+    }
+
+
 
 
 
