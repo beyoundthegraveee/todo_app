@@ -9,7 +9,7 @@ ALTER TABLE category
     ADD CONSTRAINT uc_category_name UNIQUE (name);
 
 ALTER TABLE item
-    ADD CONSTRAINT uc_item_title UNIQUE (title);
+    ADD COLUMN category_id INT;
 
 ALTER TABLE item
     ADD CONSTRAINT FK_ITEM_ON_CATEGORY FOREIGN KEY (category_id) REFERENCES category (id);
