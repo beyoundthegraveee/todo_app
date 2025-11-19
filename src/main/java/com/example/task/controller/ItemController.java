@@ -2,6 +2,7 @@ package com.example.task.controller;
 
 import com.example.task.dto.ItemRequest;
 import com.example.task.dto.ItemResponse;
+import com.example.task.exception.ItemNotFoundException;
 import com.example.task.models.Item;
 import com.example.task.service.ItemService;
 import jakarta.validation.Valid;
@@ -34,7 +35,7 @@ public class ItemController {
     public ResponseEntity<?> getItemById(@PathVariable Integer id) {
         return itemService.getItemById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(ItemNotFoundException::new);
     }
 
     @DeleteMapping("/{id}")

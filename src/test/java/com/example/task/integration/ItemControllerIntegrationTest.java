@@ -113,9 +113,4 @@ public class ItemControllerIntegrationTest {
                 .andExpect(jsonPath("$.title").value(updateItem.getTitle()))
                 .andExpect(jsonPath("$.description").value(updateItem.getDescription()));
     }
-
-
-
-
-
 }

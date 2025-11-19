@@ -2,6 +2,7 @@ package com.example.task.service;
 
 import com.example.task.dto.ItemRequest;
 import com.example.task.dto.ItemResponse;
+import com.example.task.exception.ItemNotFoundException;
 import com.example.task.models.Item;
 import com.example.task.repositories.ItemRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -60,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponse updateItemById(ItemRequest request, Integer id) {
         Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Item not found with id: " + id));
+                .orElseThrow(ItemNotFoundException::new);
         if(request.getTitle()!=null && !request.getTitle().isBlank()){
             item.setTitle(request.getTitle());
         }
