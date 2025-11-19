@@ -4,10 +4,13 @@ import com.example.task.dto.ItemRequest;
 import com.example.task.dto.ItemResponse;
 import com.example.task.models.Item;
 import com.example.task.service.ItemService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/items")
@@ -17,7 +20,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping()
-    public ResponseEntity<ItemResponse> createItem (@RequestBody ItemRequest request) {
+    public ResponseEntity<ItemResponse> createItem ( @RequestBody ItemRequest request) {
         ItemResponse itemResponse = itemService.addItem(request);
         return new ResponseEntity<>(itemResponse, HttpStatus.CREATED);
     }
