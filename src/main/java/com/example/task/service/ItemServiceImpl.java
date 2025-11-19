@@ -5,15 +5,11 @@ import com.example.task.dto.ItemResponse;
 import com.example.task.exception.ItemNotFoundException;
 import com.example.task.models.Item;
 import com.example.task.repositories.ItemRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -44,8 +40,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Optional<Item> getItemById(Integer id) {
-        return itemRepository.findById(id);
+    public Item getItemById(Integer id) {
+        return itemRepository.findById(id).orElseThrow(ItemNotFoundException::new);
     }
 
     @Override

@@ -33,9 +33,7 @@ public class ItemController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getItemById(@PathVariable Integer id) {
-        return itemService.getItemById(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(ItemNotFoundException::new);
+        return new ResponseEntity<>(itemService.getItemById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
