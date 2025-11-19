@@ -1,6 +1,7 @@
 package com.example.task.integration;
 
 import com.example.task.dto.ItemRequest;
+import com.example.task.dto.ItemResponse;
 import com.example.task.repositories.ItemRepository;
 import com.example.task.service.ItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,6 +63,24 @@ public class ItemControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    void getItemByIdShouldReturnItem() throws Exception {
+        ItemRequest item = new ItemRequest("Task1", "Description 1");
+        ItemResponse saved = itemService.addItem(item);
+
+        mockMvc.perform(get("/api/items/{id}", saved.getId())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(saved.getId()));
+    }
+
+
+    @Test
+    void getItemByIdShouldReturnNotFound() throws Exception {
+        mockMvc.perform(get("/api/items/{id}", 11111))
+                .andExpect(status().isNotFound());
     }
 
 
