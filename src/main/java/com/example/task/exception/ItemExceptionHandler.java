@@ -13,7 +13,7 @@ import java.util.Map;
 public class ItemExceptionHandler  {
 
     @ExceptionHandler(ItemNotFoundException.class)
-    public ResponseEntity<?> handleItemNotFoundException(ItemNotFoundException e) {
+    public ResponseEntity<Map<String, Object>> handleItemNotFoundException(ItemNotFoundException e) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", HttpStatus.NOT_FOUND.value());
         response.put("message", e.getMessage());
@@ -21,7 +21,7 @@ public class ItemExceptionHandler  {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleServerException(Exception e) {
+    public ResponseEntity<Map<String, Object>> handleServerException(Exception e) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.put("message", e.getMessage());
@@ -29,7 +29,7 @@ public class ItemExceptionHandler  {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", HttpStatus.BAD_REQUEST.value());
         response.put("message", "Arguments not valid");

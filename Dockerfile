@@ -1,8 +1,4 @@
-FROM postgres:16
-
-ENV POSTGRES_USER postgres
-ENV POSTGRES_PASSWORD admin
-ENV POSTGRES_PORT 5432
-ENV POSTGRES_DB todo
-
+FROM eclipse-temurin:21-jdk-alpine
+COPY target/task-0.0.1-SNAPSHOT.jar todo-app.jar
+ENTRYPOINT ["java", "-jar", "/todo-app.jar"]
 
