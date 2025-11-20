@@ -22,17 +22,16 @@ public class ItemController {
 
     @PostMapping()
     public ResponseEntity<ItemResponse> createItem ( @RequestBody @Valid ItemRequest request) {
-        ItemResponse itemResponse = itemService.addItem(request);
-        return new ResponseEntity<>(itemResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(itemService.addItem(request), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<Item>> getAllItems() {
+    public ResponseEntity<List<ItemResponse>> getAllItems() {
         return new ResponseEntity<>(itemService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getItemById(@PathVariable Integer id) {
+    public ResponseEntity<ItemResponse> getItemById(@PathVariable Integer id) {
         return new ResponseEntity<>(itemService.getItemById(id), HttpStatus.OK);
     }
 
@@ -48,8 +47,7 @@ public class ItemController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<ItemResponse> updateItemById(@PathVariable Integer id, @RequestBody @Valid ItemRequest request) {
-        ItemResponse itemResponse = itemService.updateItemById(request, id);
-        return new ResponseEntity<>(itemResponse, HttpStatus.OK);
+        return new ResponseEntity<>(itemService.updateItemById(request, id), HttpStatus.OK);
     }
 
 }

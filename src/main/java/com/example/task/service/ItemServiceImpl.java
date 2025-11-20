@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,14 +37,32 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Iterable<Item> findAll() {
-        return itemRepository.findAll();
+    public List<ItemResponse> findAll() {
+        List<ItemResponse> itemResponses = new  ArrayList<>();
+        itemRepository.findAll().forEach(item ->
+                itemResponses.add(new ItemResponse(
+                        item.getId(),
+                        item.getTitle(),
+                        item.getDescription(),
+                        item.getCreatedAt(),
+                        item.getUpdatedAt()
+                )));
+
+        return  itemResponses;
     }
 
     @Override
-    public Item getItemById(Integer id) {
-        return itemRepository.findById(id).orElseThrow(ItemNotFoundException::new);
+    public ItemResponse getItemById(Integer id) {
+        Item item = itemRepository.findById(id).orElseThrow(ItemNotFoundException::new);
+        return new ItemResponse(
+                item.getId(),
+                item.getTitle(),
+                item.getDescription(),
+                item.getCreatedAt(),
+                item.getUpdatedAt()
+        );
     }
+
 
     @Override
     public boolean deleteItem(Integer id) {
