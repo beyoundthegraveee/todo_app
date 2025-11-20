@@ -39,7 +39,7 @@ public class ItemController {
     public ResponseEntity<Void> deleteItemById(@PathVariable Integer id) {
         boolean isDeleted = itemService.deleteItem(id);
         if (isDeleted) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }else  {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
