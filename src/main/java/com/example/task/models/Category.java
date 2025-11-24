@@ -15,7 +15,7 @@ public class Category {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    private String categoryName;
 
     @OneToMany(mappedBy = "category")
     private List<Item> items = new ArrayList<>();
