@@ -13,7 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -70,9 +74,16 @@ public class ItemControllerIntegrationTest {
         itemService.addItem(item2);
 
         mockMvc.perform(get("/api/items")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    ItemResponse[] itemResponses = objectMapper.readValue(json, ItemResponse[].class);
+                    assertThat(itemResponses.length).isEqualTo(2);
+                    assertThat(itemResponses).extracting(ItemResponse::getTitle).containsExactlyInAnyOrder(
+                            "Task1", "Task2"
+                    );
+                })
+                .andExpect(status().isOk());
     }
 
     @Test
