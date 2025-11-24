@@ -13,6 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,8 +49,16 @@ public class ItemControllerIntegrationTest {
         mockMvc.perform(post("/api/items")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(itemRequest)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").exists());
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    ItemResponse itemResponse = objectMapper.readValue(json, ItemResponse.class);
+                    assertThat(itemResponse.getId()).isNotNull();
+                    assertThat(itemResponse.getTitle()).isEqualTo(itemRequest.getTitle());
+                    assertThat(itemResponse.getDescription()).isEqualTo(itemRequest.getDescription());
+                    assertThat(itemResponse.getCreatedAt()).isNotNull();
+                    assertThat(itemResponse.getUpdatedAt()).isNotNull();
+                })
+                .andExpect(status().isCreated());
     }
 
 
