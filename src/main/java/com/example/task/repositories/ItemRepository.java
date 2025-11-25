@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ItemRepository extends CrudRepository<Item, Integer> {
 
+    boolean existsById(Long id);
 }

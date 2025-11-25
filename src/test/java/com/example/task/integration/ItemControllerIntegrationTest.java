@@ -118,13 +118,13 @@ public class ItemControllerIntegrationTest {
     }
 
     @Test
-    void deleteItemByIdShouldReturnTrue() throws Exception {
+    void deleteItemByIdShouldReturnNoContentWhenItemExists() throws Exception {
         ItemRequest item = new ItemRequest("Task1", "Description 1");
         ItemResponse saved = itemService.addItem(item);
-
-        mockMvc.perform(delete("/api/items/{id}", saved.getId())
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        assertThat(itemRepository.existsById(saved.getId())).isTrue();
+        mockMvc.perform(delete("/api/items/{id}", saved.getId()))
+                .andExpect(status().isNoContent());
+        assertThat(itemRepository.existsById(saved.getId())).isFalse();
     }
 
     @Test
