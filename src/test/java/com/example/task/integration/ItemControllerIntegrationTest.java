@@ -153,7 +153,7 @@ public class ItemControllerIntegrationTest {
                     assertThat(itemResponse.getTitle()).isEqualTo(updateItem.getTitle());
                     assertThat(itemResponse.getDescription()).isEqualTo(updateItem.getDescription());
                     assertThat(itemResponse.getCreatedAt()).isNotNull();
-                    assertThat(itemResponse.getUpdatedAt()).isNotNull();
+                    assertThat(itemResponse.getUpdatedAt()).isAfter(saved.getUpdatedAt());
                 });
 
         Item updatedItem = itemRepository.findById(saved.getId());
