@@ -17,7 +17,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
-    private ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
 
 
     @Override
