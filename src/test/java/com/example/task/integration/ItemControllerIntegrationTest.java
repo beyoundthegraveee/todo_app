@@ -53,6 +53,7 @@ public class ItemControllerIntegrationTest {
         mockMvc.perform(post("/api/items")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(itemRequest)))
+                .andExpect(status().isCreated())
                 .andExpect(result -> {
                     String json = result.getResponse().getContentAsString();
                     ItemResponse itemResponse = objectMapper.readValue(json, ItemResponse.class);
@@ -61,8 +62,7 @@ public class ItemControllerIntegrationTest {
                     assertThat(itemResponse.getDescription()).isEqualTo(itemRequest.getDescription());
                     assertThat(itemResponse.getCreatedAt()).isNotNull();
                     assertThat(itemResponse.getUpdatedAt()).isNotNull();
-                })
-                .andExpect(status().isCreated());
+                });
     }
 
 
@@ -75,6 +75,7 @@ public class ItemControllerIntegrationTest {
 
         mockMvc.perform(get("/api/items")
                         .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andExpect(result -> {
                     String json = result.getResponse().getContentAsString();
                     ItemResponse[] itemResponses = objectMapper.readValue(json, ItemResponse[].class);
@@ -82,8 +83,7 @@ public class ItemControllerIntegrationTest {
                     assertThat(itemResponses).extracting(ItemResponse::getTitle).containsExactlyInAnyOrder(
                             "Task1", "Task2"
                     );
-                })
-                .andExpect(status().isOk());
+                });
     }
 
     @Test
@@ -93,6 +93,7 @@ public class ItemControllerIntegrationTest {
 
         mockMvc.perform(get("/api/items/{id}", saved.getId())
                 .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andExpect(result -> {
                     String json = result.getResponse().getContentAsString();
                     ItemResponse itemResponse = objectMapper.readValue(json, ItemResponse.class);
@@ -101,15 +102,19 @@ public class ItemControllerIntegrationTest {
                     assertThat(itemResponse.getDescription()).isEqualTo(saved.getDescription());
                     assertThat(itemResponse.getCreatedAt()).isNotNull();
                     assertThat(itemResponse.getUpdatedAt()).isNotNull();
-                })
-                .andExpect(status().isOk());
+                });
     }
 
 
     @Test
     void getItemByIdShouldReturnNotFound() throws Exception {
-        mockMvc.perform(get("/api/items/{id}", 11111))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/api/items/{id}", 9999))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    String message = objectMapper.readTree(json).get("message").asText();
+                    assertThat(message).isEqualTo("Item not found");
+                });
     }
 
     @Test
