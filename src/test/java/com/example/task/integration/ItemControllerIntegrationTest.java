@@ -162,4 +162,14 @@ public class ItemControllerIntegrationTest {
     }
 
 
+    @Test
+    void updateItemShouldReturnNotFoundWhenItemDoesNotExist() throws Exception {
+        ItemRequest item = new ItemRequest("Task1", "Description 1");
+        mockMvc.perform(patch("/api/items/{id}", 9999)
+                        .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(item)))
+                .andExpect(status().isNotFound());
+    }
+
+
 }
