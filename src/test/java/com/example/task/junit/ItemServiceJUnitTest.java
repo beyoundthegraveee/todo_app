@@ -23,8 +23,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ItemServiceJUnitTest {
@@ -130,6 +129,33 @@ public class ItemServiceJUnitTest {
 
         verify(itemRepository).findById(999);
     }
+
+
+    @Test
+    @DisplayName("deleteItemById should delete item and return true")
+    void deleteItemByIdShouldReturnTrueWhenItemExist(){
+        Item item = new Item();
+        item.setId(5);
+
+        when(itemRepository.findById(5)).thenReturn(Optional.of(item));
+
+        boolean Result = itemService.deleteItem(5);
+        assertThat(Result).isTrue();
+        verify(itemRepository).findById(5);
+        verify(itemRepository).deleteById(5);
+    }
+
+    @Test
+    void deleteItemByIdShouldReturnFalseWhenItemDoesNotExist(){
+        when(itemRepository.findById(8)).thenReturn(Optional.empty());
+
+        boolean Result = itemService.deleteItem(8);
+        assertThat(Result).isFalse();
+        verify(itemRepository).findById(8);
+        verify(itemRepository, never()).deleteById(anyInt());
+    }
+
+
 
 
 
