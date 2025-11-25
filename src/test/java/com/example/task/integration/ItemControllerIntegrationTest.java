@@ -93,8 +93,16 @@ public class ItemControllerIntegrationTest {
 
         mockMvc.perform(get("/api/items/{id}", saved.getId())
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(saved.getId()));
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    ItemResponse itemResponse = objectMapper.readValue(json, ItemResponse.class);
+                    assertThat(itemResponse.getId()).isEqualTo(saved.getId());
+                    assertThat(itemResponse.getTitle()).isEqualTo(saved.getTitle());
+                    assertThat(itemResponse.getDescription()).isEqualTo(saved.getDescription());
+                    assertThat(itemResponse.getCreatedAt()).isNotNull();
+                    assertThat(itemResponse.getUpdatedAt()).isNotNull();
+                })
+                .andExpect(status().isOk());
     }
 
 
