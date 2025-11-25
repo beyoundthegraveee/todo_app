@@ -2,12 +2,10 @@ package com.example.task.junit;
 
 import com.example.task.dto.ItemRequest;
 import com.example.task.dto.ItemResponse;
+import com.example.task.exception.ItemNotFoundException;
 import com.example.task.models.Item;
 import com.example.task.repositories.ItemRepository;
-import com.example.task.service.ItemService;
 import com.example.task.service.ItemServiceImpl;
-import lombok.AllArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,13 +13,16 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,12 +75,10 @@ public class ItemServiceJUnitTest {
     @DisplayName("findAll should map all entities to ItemResponse")
     void findAllShouldReturnListOfItemResponses(){
         Item item1 = new Item();
-        item1.setId(1);
         item1.setTitle("Title 1");
         item1.setDescription("Description 1");
 
         Item item2 = new Item();
-        item2.setId(2);
         item2.setTitle("Title 2");
         item2.setDescription("Description 2");
 
@@ -102,6 +101,35 @@ public class ItemServiceJUnitTest {
         verify(itemRepository).findAll();
     }
 
+
+    @Test
+    @DisplayName("getItemById should return ItemResponse with the same id")
+    void getItemByIdShouldReturnItemResponseWhenExists(){
+        Item item = new Item();
+        item.setId(10);
+        item.setTitle("Some Title");
+        item.setDescription("Some Description");
+
+        when(itemRepository.findById(10)).thenReturn(Optional.of(item));
+
+        ItemResponse itemResponse = itemService.getItemById(10);
+
+        assertThat(itemResponse.getId()).isEqualTo(10);
+        assertThat(itemResponse.getTitle()).isEqualTo("Some Title");
+        assertThat(itemResponse.getDescription()).isEqualTo("Some Description");
+
+        verify(itemRepository).findById(10);
+    }
+
+    @Test
+    @DisplayName("getItemById should return ItemNotFoundException when item does not exist")
+    void getItemByIdShouldReturnItemNotFoundExceptionWhenNotFound(){
+        when(itemRepository.findById(anyInt())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> itemService.getItemById(999)).isInstanceOf(ItemNotFoundException.class);
+
+        verify(itemRepository).findById(999);
+    }
 
 
 
