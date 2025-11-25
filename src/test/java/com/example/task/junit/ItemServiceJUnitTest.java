@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -66,6 +67,39 @@ public class ItemServiceJUnitTest {
         assertThat(itemResponse.getDescription()).isEqualTo("Test description");
         assertThat(itemResponse.getCreatedAt()).isNotNull();
         assertThat(itemResponse.getUpdatedAt()).isNotNull();
+    }
+
+
+    @Test
+    @DisplayName("findAll should map all entities to ItemResponse")
+    void findAllShouldReturnListOfItemResponses(){
+        Item item1 = new Item();
+        item1.setId(1);
+        item1.setTitle("Title 1");
+        item1.setDescription("Description 1");
+
+        Item item2 = new Item();
+        item2.setId(2);
+        item2.setTitle("Title 2");
+        item2.setDescription("Description 2");
+
+        when(itemRepository.findAll()).thenReturn(List.of(item1, item2));
+
+        List<ItemResponse> itemResponses = itemService.findAll();
+
+        assertThat(itemResponses.size()).isEqualTo(2);
+
+        ItemResponse itemResponse1 = itemResponses.getFirst();
+        assertThat(itemResponse1.getId()).isEqualTo(1);
+        assertThat(itemResponse1.getTitle()).isEqualTo("Title 1");
+        assertThat(itemResponse1.getDescription()).isEqualTo("Description 1");
+
+        ItemResponse itemResponse2 = itemResponses.get(1);
+        assertThat(itemResponse2.getId()).isEqualTo(2);
+        assertThat(itemResponse2.getTitle()).isEqualTo("Title 2");
+        assertThat(itemResponse2.getDescription()).isEqualTo("Description 2");
+
+        verify(itemRepository).findAll();
     }
 
 
