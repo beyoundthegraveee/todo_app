@@ -2,6 +2,7 @@ package com.example.task.integration;
 
 import com.example.task.dto.ItemRequest;
 import com.example.task.dto.ItemResponse;
+import com.example.task.models.Item;
 import com.example.task.repositories.ItemRepository;
 import com.example.task.service.ItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -118,35 +119,47 @@ public class ItemControllerIntegrationTest {
     }
 
     @Test
-    void deleteItemByIdShouldReturnTrue() throws Exception {
+    void deleteItemByIdShouldReturnNoContentWhenItemExists() throws Exception {
         ItemRequest item = new ItemRequest("Task1", "Description 1");
         ItemResponse saved = itemService.addItem(item);
-
-        mockMvc.perform(delete("/api/items/{id}", saved.getId())
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        assertThat(itemRepository.existsById(saved.getId())).isTrue();
+        mockMvc.perform(delete("/api/items/{id}", saved.getId()))
+                .andExpect(status().isNoContent());
+        assertThat(itemRepository.existsById(saved.getId())).isFalse();
     }
 
     @Test
-    void deleteItemByIdShouldReturnNotFound() throws Exception {
+    void deleteItemByIdShouldReturnNotFoundWhenItemDoesNotExist() throws Exception {
         mockMvc.perform(delete("/api/items/{id}", 11111))
                 .andExpect(status().isNotFound());
     }
 
 
     @Test
-    void updateItemShouldReturnUpdatedItem() throws Exception {
+    void updateItemShouldReturnUpdatedItemWhenItemExists() throws Exception {
         ItemRequest item = new ItemRequest("Task1", "Description 1");
         ItemResponse saved = itemService.addItem(item);
+        assertThat(itemRepository.existsById(saved.getId())).isTrue();
 
         ItemRequest updateItem = new ItemRequest("New Task", "New Description");
         mockMvc.perform(patch("/api/items/{id}", saved.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateItem)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(saved.getId()))
-                .andExpect(jsonPath("$.title").value(updateItem.getTitle()))
-                .andExpect(jsonPath("$.description").value(updateItem.getDescription()));
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    ItemResponse itemResponse = objectMapper.readValue(json, ItemResponse.class);
+                    assertThat(itemResponse.getId()).isEqualTo(saved.getId());
+                    assertThat(itemResponse.getTitle()).isEqualTo(updateItem.getTitle());
+                    assertThat(itemResponse.getDescription()).isEqualTo(updateItem.getDescription());
+                    assertThat(itemResponse.getCreatedAt()).isNotNull();
+                    assertThat(itemResponse.getUpdatedAt()).isNotNull();
+                });
+
+        Item updatedItem = itemRepository.findById(saved.getId());
+        assertThat(updatedItem.getTitle()).isEqualTo(updateItem.getTitle());
+        assertThat(updatedItem.getDescription()).isEqualTo(updateItem.getDescription());
     }
+
 
 }
