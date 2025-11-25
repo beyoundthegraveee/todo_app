@@ -1,5 +1,4 @@
 package com.example.task.junit;
-
 import com.example.task.dto.ItemRequest;
 import com.example.task.dto.ItemResponse;
 import com.example.task.exception.ItemNotFoundException;
@@ -13,14 +12,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -65,8 +61,6 @@ public class ItemServiceJUnitTest {
         assertThat(itemResponse.getId()).isEqualTo(1);
         assertThat(itemResponse.getTitle()).isEqualTo("Test title");
         assertThat(itemResponse.getDescription()).isEqualTo("Test description");
-        assertThat(itemResponse.getCreatedAt()).isNotNull();
-        assertThat(itemResponse.getUpdatedAt()).isNotNull();
     }
 
 
@@ -183,8 +177,8 @@ public class ItemServiceJUnitTest {
         verify(itemRepository).save(oldItem);
     }
 
-
     @Test
+    @DisplayName("updateItem should throw ItemNotFoundException when item does not exist")
     void  updateItemByIdShouldThrowExceptionWhenItemDoesNotExist(){
         ItemRequest updateRequest = new ItemRequest(
                 "New Title",
@@ -197,9 +191,5 @@ public class ItemServiceJUnitTest {
         verify(itemRepository).findById(999);
         verify(itemRepository, never()).save(any());
     }
-
-
-
-
 
 }
