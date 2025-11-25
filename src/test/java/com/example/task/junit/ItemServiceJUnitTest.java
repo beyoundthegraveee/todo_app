@@ -155,6 +155,49 @@ public class ItemServiceJUnitTest {
         verify(itemRepository, never()).deleteById(anyInt());
     }
 
+    @Test
+    @DisplayName("updateItem should update all features of an old item and return ItemResponse")
+    void updateItemByIdShouldUpdateItemWhenItemExist(){
+        Item oldItem = new Item();
+        oldItem.setId(1);
+        oldItem.setTitle("Old Title");
+        oldItem.setDescription("Old Description");
+
+        when(itemRepository.findById(1)).thenReturn(Optional.of(oldItem));
+        when(itemRepository.save(any(Item.class))).thenAnswer(i -> i.getArgument(0));
+
+        ItemRequest updateRequest = new ItemRequest(
+                "New Title",
+                "New Description"
+        );
+
+        ItemResponse itemResponse = itemService.updateItemById(updateRequest, 1);
+
+        assertThat(itemResponse.getTitle()).isEqualTo("New Title");
+        assertThat(itemResponse.getDescription()).isEqualTo("New Description");
+        assertThat(itemResponse.getId()).isEqualTo(1);
+        assertThat(itemResponse.getCreatedAt()).isNotNull();
+        assertThat(itemResponse.getUpdatedAt()).isNotNull();
+
+        verify(itemRepository).findById(1);
+        verify(itemRepository).save(oldItem);
+    }
+
+
+    @Test
+    void  updateItemByIdShouldThrowExceptionWhenItemDoesNotExist(){
+        ItemRequest updateRequest = new ItemRequest(
+                "New Title",
+                "New Description"
+        );
+
+        when(itemRepository.findById(anyInt())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> itemService.updateItemById(updateRequest, 999)).isInstanceOf(ItemNotFoundException.class);
+        verify(itemRepository).findById(999);
+        verify(itemRepository, never()).save(any());
+    }
+
 
 
 
