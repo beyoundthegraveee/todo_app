@@ -1,4 +1,4 @@
-package com.example.task.junit;
+package com.example.task.unit;
 import com.example.task.dto.ItemRequest;
 import com.example.task.dto.ItemResponse;
 import com.example.task.exception.ItemNotFoundException;
