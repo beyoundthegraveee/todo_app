@@ -48,7 +48,7 @@ public class ItemControllerIntegrationTest {
 
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16")
-            .withDatabaseName("test_db")
+            .withDatabaseName("todo")
             .withUsername("postgres")
             .withPassword("postgres");
 

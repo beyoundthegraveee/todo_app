@@ -1,9 +1,13 @@
 package com.example.task.integration;
 
+import com.example.task.dto.ItemRequest;
+import com.example.task.dto.ItemResponse;
+import com.example.task.models.Item;
 import com.example.task.repositories.ItemRepository;
 import com.example.task.service.ItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @Testcontainers
 @SpringBootTest
@@ -31,7 +37,7 @@ public class ItemServiceIntegrationTests {
 
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16")
-            .withDatabaseName("test_db")
+            .withDatabaseName("todo")
             .withUsername("postgres")
             .withPassword("postgres");
 
@@ -43,6 +49,26 @@ public class ItemServiceIntegrationTests {
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "none");
     }
 
+
+    @Test
+    void addItemShouldPersistAndReturnResponse() {
+        ItemRequest itemRequest = new ItemRequest(
+                "New task",
+                "New description"
+        );
+
+        ItemResponse itemResponse = itemService.addItem(itemRequest);
+
+        assertThat(itemResponse.getId()).isNotNull();
+        assertThat(itemResponse.getTitle()).isEqualTo("New task");
+        assertThat(itemResponse.getDescription()).isEqualTo("New description");
+
+        Item saved = itemRepository.findById(itemResponse.getId());
+        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getTitle()).isEqualTo("New task");
+        assertThat(saved.getDescription()).isEqualTo("New description");
+
+    }
 
 
 }
