@@ -14,9 +14,9 @@ public interface ItemService {
 
     List<ItemResponse> findAll();
 
-    ItemResponse getItemById(Integer id);
+    ItemResponse getItemById(Long id);
 
-    boolean deleteItem(Integer id);
+    boolean deleteItem(Long id);
 
-    ItemResponse updateItemById(ItemRequest request, Integer id);
+    ItemResponse updateItemById(ItemRequest request, Long id);
 }

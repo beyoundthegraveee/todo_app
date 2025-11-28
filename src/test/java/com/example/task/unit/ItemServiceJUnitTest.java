@@ -41,7 +41,7 @@ public class ItemServiceJUnitTest {
 
         when(itemRepository.save(any(Item.class))).thenAnswer(invocation -> {
             Item item = invocation.getArgument(0);
-            item.setId(1);
+            item.setId(1L);
             item.setCreatedAt(LocalDateTime.now());
             item.setUpdatedAt(LocalDateTime.now());
             return item;
@@ -99,19 +99,19 @@ public class ItemServiceJUnitTest {
     @DisplayName("getItemById should return ItemResponse with the same id")
     void getItemByIdShouldReturnItemResponseWhenExists(){
         Item item = new Item();
-        item.setId(10);
+        item.setId(10L);
         item.setTitle("Some Title");
         item.setDescription("Some Description");
 
-        when(itemRepository.findById(10)).thenReturn(Optional.of(item));
+        when(itemRepository.findById(10L)).thenReturn(item);
 
-        ItemResponse itemResponse = itemService.getItemById(10);
+        ItemResponse itemResponse = itemService.getItemById(10L);
 
-        assertThat(itemResponse.getId()).isEqualTo(10);
+        assertThat(itemResponse.getId()).isEqualTo(10L);
         assertThat(itemResponse.getTitle()).isEqualTo("Some Title");
         assertThat(itemResponse.getDescription()).isEqualTo("Some Description");
 
-        verify(itemRepository).findById(10);
+        verify(itemRepository).findById(10L);
     }
 
     @Test
@@ -119,9 +119,9 @@ public class ItemServiceJUnitTest {
     void getItemByIdShouldReturnItemNotFoundExceptionWhenNotFound(){
         when(itemRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> itemService.getItemById(999)).isInstanceOf(ItemNotFoundException.class);
+        assertThatThrownBy(() -> itemService.getItemById(999L)).isInstanceOf(ItemNotFoundException.class);
 
-        verify(itemRepository).findById(999);
+        verify(itemRepository).findById(999L);
     }
 
 
@@ -129,13 +129,13 @@ public class ItemServiceJUnitTest {
     @DisplayName("deleteItemById should delete item and return true")
     void deleteItemByIdShouldReturnTrueWhenItemExist(){
         Item item = new Item();
-        item.setId(5);
+        item.setId(5L);
 
-        when(itemRepository.findById(5)).thenReturn(Optional.of(item));
+        when(itemRepository.findById(5L)).thenReturn(item);
 
-        boolean Result = itemService.deleteItem(5);
+        boolean Result = itemService.deleteItem(5L);
         assertThat(Result).isTrue();
-        verify(itemRepository).findById(5);
+        verify(itemRepository).findById(5L);
         verify(itemRepository).deleteById(5);
     }
 
@@ -143,7 +143,7 @@ public class ItemServiceJUnitTest {
     void deleteItemByIdShouldReturnFalseWhenItemDoesNotExist(){
         when(itemRepository.findById(8)).thenReturn(Optional.empty());
 
-        boolean Result = itemService.deleteItem(8);
+        boolean Result = itemService.deleteItem(8L);
         assertThat(Result).isFalse();
         verify(itemRepository).findById(8);
         verify(itemRepository, never()).deleteById(anyInt());
@@ -153,7 +153,7 @@ public class ItemServiceJUnitTest {
     @DisplayName("updateItem should update all features of an old item and return ItemResponse")
     void updateItemByIdShouldUpdateItemWhenItemExist(){
         Item oldItem = new Item();
-        oldItem.setId(1);
+        oldItem.setId(1L);
         oldItem.setTitle("Old Title");
         oldItem.setDescription("Old Description");
 
@@ -165,7 +165,7 @@ public class ItemServiceJUnitTest {
                 "New Description"
         );
 
-        ItemResponse itemResponse = itemService.updateItemById(updateRequest, 1);
+        ItemResponse itemResponse = itemService.updateItemById(updateRequest, 1L);
 
         assertThat(itemResponse.getTitle()).isEqualTo("New Title");
         assertThat(itemResponse.getDescription()).isEqualTo("New Description");
@@ -187,8 +187,8 @@ public class ItemServiceJUnitTest {
 
         when(itemRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> itemService.updateItemById(updateRequest, 999)).isInstanceOf(ItemNotFoundException.class);
-        verify(itemRepository).findById(999);
+        assertThatThrownBy(() -> itemService.updateItemById(updateRequest, 999L)).isInstanceOf(ItemNotFoundException.class);
+        verify(itemRepository).findById(999L);
         verify(itemRepository, never()).save(any());
     }
 

@@ -31,12 +31,12 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemResponse> getItemById(@PathVariable Integer id) {
+    public ResponseEntity<ItemResponse> getItemById(@PathVariable Long id) {
         return new ResponseEntity<>(itemService.getItemById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteItemById(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteItemById(@PathVariable Long id) {
         boolean isDeleted = itemService.deleteItem(id);
         if (isDeleted) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -46,7 +46,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ItemResponse> updateItemById(@PathVariable Integer id, @RequestBody @Valid ItemRequest request) {
+    public ResponseEntity<ItemResponse> updateItemById(@PathVariable Long id, @RequestBody @Valid ItemRequest request) {
         return new ResponseEntity<>(itemService.updateItemById(request, id), HttpStatus.OK);
     }
 
