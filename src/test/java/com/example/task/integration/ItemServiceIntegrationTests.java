@@ -92,6 +92,22 @@ public class ItemServiceIntegrationTests {
                 .containsExactlyInAnyOrder("Task 1", "Task 2");
     }
 
+    @Test
+    void findByIdShouldReturnResponse() {
+        ItemRequest itemRequest = new ItemRequest(
+                "Task",
+                "Description"
+        );
+
+        ItemResponse saved = itemService.addItem(itemRequest);
+
+        ItemResponse response = itemService.getItemById(saved.getId());
+    }
+
+
+
+
+
 
 
 }

@@ -52,7 +52,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemResponse getItemById(Integer id) {
+    public ItemResponse getItemById(Long id) {
         Item item = itemRepository.findById(id).orElseThrow(ItemNotFoundException::new);
         return new ItemResponse(
                 item.getId(),
@@ -65,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public boolean deleteItem(Integer id) {
+    public boolean deleteItem(Long id) {
         Optional<Item> item = itemRepository.findById(id);
         if (item.isPresent()) {
             itemRepository.deleteById(id);
@@ -75,7 +75,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemResponse updateItemById(ItemRequest request, Integer id) {
+    public ItemResponse updateItemById(ItemRequest request, Long id) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(ItemNotFoundException::new);
         if(request.getTitle()!=null && !request.getTitle().isBlank()){
